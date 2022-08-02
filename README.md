@@ -3,3 +3,4 @@
 ## Hard version
 # Progress status
 - [x] Step 1 Done
+- [x] Step 2 Done
