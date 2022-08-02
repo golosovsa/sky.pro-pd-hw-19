@@ -7,3 +7,6 @@
 - [x] Step 2.1 Done
 - [x] Step 3 Done
 - [x] Step 4 Done
+- [x] Step 5 Done
+- [x] Step 6 Done
+- [x] Step 7 Done

@@ -2,6 +2,8 @@ import base64
 import hashlib
 import hmac
 
+from flask_restx import abort
+
 from app.dao.user import UserDAO
 from app.constants import PWD_HASH_SALT, PWD_HASH_ITERATIONS
 
@@ -20,6 +22,19 @@ class UserService:
         return self.dao.get_all()
 
     def create(self, user_data):
+        username = user_data.get("username")
+        password = user_data.get("password")
+        role = user_data.get("role")
+
+        if not username or not password or not role:
+            abort(400)
+
+        user_data = {
+            "username": username,
+            "password": self.get_hash(password),
+            "role": role,
+        }
+
         return self.dao.create(user_data)
 
     def update(self, user_data):
@@ -41,6 +56,6 @@ class UserService:
     @staticmethod
     def compare_passwords(hashed_password, open_password):
         return hmac.compare_digest(
-                base64.b64decode(hashed_password),
-                base64.b64decode(UserService.get_hash(password=open_password))
+            base64.b64decode(hashed_password),
+            base64.b64decode(UserService.get_hash(password=open_password))
         )

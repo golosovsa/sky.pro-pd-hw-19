@@ -5,6 +5,7 @@ import calendar
 import datetime
 
 import jwt
+from flask import request
 from flask_restx import abort
 
 from app.constants import JWT_SECRET, JWT_ALGORITHM
@@ -53,3 +54,34 @@ class AuthService:
         username = data.get("username", None)
 
         return self.generate_tokens(username, None, True)
+
+    @staticmethod
+    def check_authorization_or_404():
+        if "Authorization" not in request.headers:
+            abort(401)
+        data = request.headers['Authorization']
+        token = data.split("Bearer ")[-1]
+        try:
+            return jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        except jwt.exceptions.PyJWTError:
+            abort(401)
+
+
+def auth_required(func):
+    def wrapper(*args, **kwargs):
+        AuthService.check_authorization_or_404()
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
+def admin_required(func):
+    def wrapper(*args, **kwargs):
+        data = AuthService.check_authorization_or_404()
+
+        if not data or "role" not in data or data["role"] != "admin":
+            abort(400)
+
+        return func(*args, **kwargs)
+
+    return wrapper
