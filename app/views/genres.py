@@ -23,7 +23,7 @@ class GenresView(Resource):
 class GenreView(Resource):
     def get(self, gid):
         genre = genre_service.get_one(gid)
-        data = GenreSchema().dump(genr)
+        data = GenreSchema().dump(genre)
         return data, 200
 
     def put(self, gid):

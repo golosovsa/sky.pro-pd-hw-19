@@ -1,4 +1,6 @@
+import base64
 import hashlib
+import hmac
 
 from app.dao.user import UserDAO
 from app.constants import PWD_HASH_SALT, PWD_HASH_ITERATIONS
@@ -10,6 +12,9 @@ class UserService:
 
     def get_one(self, uid):
         return self.dao.get_one(uid)
+
+    def get_by_username(self, username):
+        return self.dao.get_by_username(username)
 
     def get_all(self):
         return self.dao.get_all()
@@ -32,3 +37,10 @@ class UserService:
             PWD_HASH_SALT,
             PWD_HASH_ITERATIONS
         ).decode("utf-8", "ignore")
+
+    @staticmethod
+    def compare_passwords(hashed_password, open_password):
+        return hmac.compare_digest(
+                base64.b64decode(hashed_password),
+                base64.b64decode(UserService.get_hash(password=open_password))
+        )

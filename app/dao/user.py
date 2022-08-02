@@ -1,3 +1,5 @@
+from sqlalchemy.orm import Query
+
 from app.dao.model.user import User
 
 
@@ -10,6 +12,11 @@ class UserDAO:
 
     def get_all(self):
         return self.session.query(User).all()
+
+    def get_by_username(self, username):
+        query: Query = self.session.query(User)
+        query = query.filter(User.username == username)
+        return query.one()
 
     def create(self, user_data):
         user = User(**user_data)
