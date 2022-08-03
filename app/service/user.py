@@ -54,8 +54,8 @@ class UserService:
         ).decode("utf-8", "ignore")
 
     @staticmethod
-    def compare_passwords(hashed_password, open_password):
+    def compare_passwords(hashed_password: str, open_password):
         return hmac.compare_digest(
-            base64.b64decode(hashed_password),
-            base64.b64decode(UserService.get_hash(password=open_password))
+            base64.b64decode(hashed_password.encode("utf-8") + b'=='),
+            base64.b64decode(UserService.get_hash(password=open_password).encode("utf-8") + b'==')
         )

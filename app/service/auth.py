@@ -18,6 +18,9 @@ class AuthService:
         self.user_service: UserService = user_service
 
     def generate_tokens(self, username, password, is_refresh=False):
+
+        print(username, password, is_refresh)
+
         if not username or not (password or is_refresh):
             abort(401)
 

@@ -15,7 +15,7 @@ class UserDAO:
 
     def get_by_username(self, username):
         query: Query = self.session.query(User)
-        query = query.filter(User.username == username)
+        query = query.filter(User.username == username).limit(1)
         return query.one()
 
     def create(self, user_data):
